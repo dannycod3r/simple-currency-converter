@@ -1,6 +1,11 @@
 # vitual environments for python
-
 venv/
 env/
 .venv/
 .env/
+
+# environment variables
+.env
+
+# temp file to save sample code
+scratch
