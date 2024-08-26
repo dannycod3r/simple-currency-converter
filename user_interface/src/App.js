@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import './App.css';
 import './assets/money.jpg';
 
 const CurrencyConverter = () => {
@@ -9,21 +10,26 @@ const CurrencyConverter = () => {
 
   const currencies = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'HKD', 'NZD'];
 
-  useEffect(() => {
-    const fetchExchangeRate = async () => {
-      try {
-        const response = await fetch(
-          `https://api.exchangeratesapi.io/latest?base=${fromCurrency}&symbols=${toCurrency}`
-        );
-        const data = await response.json();
-        setConvertedAmount((amount * data.rates[toCurrency]).toFixed(2));
-      } catch (error) {
-        console.error('Error fetching exchange rate:', error);
-      }
-    };
+  const fetchExchangeRate = async () => {
+    try {
+      const response = await fetch(
+        `https://api.exchangeratesapi.io/latest?base=${fromCurrency}&symbols=${toCurrency}`
+      );
+      const data = await response.json();
 
-    fetchExchangeRate();
-  }, [fromCurrency, toCurrency, amount]);
+      // Ensure the amount is treated as a number
+      const parsedAmount = parseFloat(amount);
+      if (isNaN(parsedAmount)) {
+        console.error('Invalid amount:', amount);
+        return;
+      }
+
+      const rate = data.rates[toCurrency];
+      setConvertedAmount((parsedAmount * rate).toFixed(2));
+    } catch (error) {
+      console.error('Error fetching exchange rate:', error);
+    }
+  };
 
   const handleFromCurrencyChange = (e) => {
     setFromCurrency(e.target.value);
@@ -35,6 +41,10 @@ const CurrencyConverter = () => {
 
   const handleAmountChange = (e) => {
     setAmount(e.target.value);
+  };
+
+  const handleConvert = () => {
+    fetchExchangeRate();
   };
 
   return (
@@ -74,12 +84,12 @@ const CurrencyConverter = () => {
             </select>
           </div>
 
-          <button className="convert-btn">Convert</button>
+          <button className="convert-btn" onClick={handleConvert}>Convert</button>
 
           <div className="result">
             <p>
               <span id="converted-amount">{convertedAmount}</span>
-              <span id="to-currency-symbol">{toCurrency}</span>
+              <span id="to-currency-symbol"> {toCurrency}</span>
             </p>
           </div>
         </section>
