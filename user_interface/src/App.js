@@ -6,14 +6,14 @@ const CurrencyConverter = () => {
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('USD');
   const [amount, setAmount] = useState(1);
-  const [convertedAmount, setConvertedAmount] = useState(0);
+  const [convertedAmount, setConvertedAmount] = useState(1);
 
   const currencies = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'HKD', 'NZD'];
 
   const fetchExchangeRate = async () => {
     try {
       const response = await fetch(
-        `https://api.exchangeratesapi.io/latest?base=${fromCurrency}&symbols=${toCurrency}`
+        `http://127.0.0.1:8000/api/rate/?from_currency=${fromCurrency}&to_currency=${toCurrency}`
       );
       const data = await response.json();
 
@@ -24,7 +24,7 @@ const CurrencyConverter = () => {
         return;
       }
 
-      const rate = data.rates[toCurrency];
+      const rate = data.rate;
       setConvertedAmount((parsedAmount * rate).toFixed(2));
     } catch (error) {
       console.error('Error fetching exchange rate:', error);
