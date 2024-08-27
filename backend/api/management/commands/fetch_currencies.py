@@ -1,18 +1,18 @@
-import os
 import requests
-from dotenv import load_dotenv
+from decouple import config
 from django.core.management.base import BaseCommand
 from api.models import Currency
 
 # Load environment variables from .env file
-load_dotenv()
+API_KEY = config('API_KEY')
+
 
 class Command(BaseCommand):
     help = 'Fetch currency data from external API and populate the database'
 
     def handle(self, *args, **kwargs):
         # get api key
-        api_key = os.getenv('API_KEY')
+        api_key = API_KEY
 
         if not api_key:
             self.stdout.write(self.style.ERROR('API_KEY not found in .env file'))
