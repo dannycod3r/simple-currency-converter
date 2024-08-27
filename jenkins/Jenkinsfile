@@ -5,6 +5,9 @@ pipeline {
             steps {
                 script {
                     echo 'Building the project...'
+                    sh 'rm -rf simple-currency-converter'
+                    sh 'git clone https://github.com/dannycod3r/simple-currency-converter.git'
+                    sh 'cd simple-currency-converter'
                     sh 'docker-compose -f docker-compose.yml build'
                 }
             }
